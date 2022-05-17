@@ -34,14 +34,12 @@ func Register(username string, password string, rePassword string) Service.Statu
 	return Service.Success
 }
 
-func Log(username string, password string) (Service.StatusCode, bool) {
+func Log(username string, password string) bool {
 	user := Repository.User{
 		Username: username,
 		Password: util.MD5EnCrypto(password),
 	}
-	handle, err := Service.NewLogHandle(&user)
-	if err != nil {
-		return Service.ServerError, false
-	}
-	return Service.Success, handle
+	//处理登录信息
+	return Service.NewLogHandle(&user)
+
 }

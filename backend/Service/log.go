@@ -14,19 +14,16 @@ var (
 	logOnce    sync.Once
 )
 
-func NewLogHandle(user *Repository.User) (bool, error) {
+func NewLogHandle(user *Repository.User) bool {
 	logOnce.Do(func() {
 		logService = &log{}
 	})
 	return logService.Do(user)
 }
-func (logService *log) Do(user *Repository.User) (bool, error) {
-	exist, err := Dao.NewUserDao().UserIsExist(user)
-	if err != nil {
-		return false, err
-	}
+func (logService *log) Do(user *Repository.User) bool {
+	exist := Dao.NewUserDao().UserIsExist(user)
 	if exist {
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
 }

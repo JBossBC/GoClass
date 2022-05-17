@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-basic/uuid"
 	"goClass/backend/Controller"
+	"goClass/backend/Dao/Cache"
 	"net/http"
 )
 
@@ -26,11 +27,13 @@ func initRoute(engine *gin.Engine) {
 	engine.Handle(http.MethodGet, "/log", func(context *gin.Context) {
 		username := context.Query("username")
 		password := context.Query("password")
-		StatusCode, bool := Controller.Log(username, password)
+		isTrue := Controller.Log(username, password)
 		//保存会话信息，便于后续功能的利用,value使用UUID生成
-		if bool {
-			context.SetCookie("goClass", uuid.New(), 0, "/", ".", true, true)
-			context.JSON(int(StatusCode), "congratulations you log success")
+		if isTrue {
+			tempUUID := uuid.New()
+			Cache.NewCookieDao().KeepCookieToCache(tempUUID)
+			context.SetCookie("goClass", tempUUID, 0, "/", ".", true, true)
+			context.JSON(http.StatusOK, "congratulations you log success")
 		}
 	})
 }

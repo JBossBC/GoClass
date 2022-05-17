@@ -1,6 +1,7 @@
 package Dao
 
 import (
+	"fmt"
 	"goClass/backend/Repository"
 	"strings"
 	"sync"
@@ -45,14 +46,15 @@ func (userDao *UserDao) KeepUserToDataSource(user *Repository.User) error {
 	return nil
 }
 
-func (userDao *UserDao) UserIsExist(user *Repository.User) (bool, error) {
+func (userDao *UserDao) UserIsExist(user *Repository.User) bool {
 	connection := GetMysqlConnection()
 	if err := connection.Where("username = ? and password = ?", user.Username, user.Password).Find(&user).Error; err != nil {
 		if errInt := strings.Compare(err.Error(), "record not found"); errInt != 0 {
-			return false, err
+			fmt.Println(err.Error())
+			return false
 		} else {
-			return false, nil
+			return false
 		}
 	}
-	return true, nil
+	return true
 }
