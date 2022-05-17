@@ -2,8 +2,9 @@ package Dao
 
 import (
 	"fmt"
+	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 	"goClass/backend/Repository"
-	"strings"
 	"sync"
 )
 
@@ -27,7 +28,7 @@ func NewUserDao() *UserDao {
 func (userDao *UserDao) UsernameIsExist(username string) (bool, error) {
 	connection := GetMysqlConnection()
 	if err := connection.Where("username = ?", username).Select("username").Find(&Repository.User{}).Error; err != nil {
-		if errInt := strings.Compare(err.Error(), "record not found"); errInt != 0 {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return false, err
 		} else {
 			return false, nil
@@ -49,7 +50,7 @@ func (userDao *UserDao) KeepUserToDataSource(user *Repository.User) error {
 func (userDao *UserDao) UserIsExist(user *Repository.User) bool {
 	connection := GetMysqlConnection()
 	if err := connection.Where("username = ? and password = ?", user.Username, user.Password).Find(&user).Error; err != nil {
-		if errInt := strings.Compare(err.Error(), "record not found"); errInt != 0 {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			fmt.Println(err.Error())
 			return false
 		} else {
