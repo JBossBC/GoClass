@@ -44,3 +44,15 @@ func (userDao *UserDao) KeepUserToDataSource(user *Repository.User) error {
 	}
 	return nil
 }
+
+func (userDao *UserDao) UserIsExist(user *Repository.User) (bool, error) {
+	connection := GetMysqlConnection()
+	if err := connection.Where("username = ? and password = ?", user.Username, user.Password).Find(&user).Error; err != nil {
+		if errInt := strings.Compare(err.Error(), "record not found"); errInt != 0 {
+			return false, err
+		} else {
+			return false, nil
+		}
+	}
+	return true, nil
+}

@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	UsernameExist   StatusCode = 402
-	ServerError     StatusCode = 500
-	SuccessRegister StatusCode = 200
+	UsernameExist StatusCode = 402
+	ServerError   StatusCode = 500
+	Success       StatusCode = 200
 )
 
 //StatusCode 定义在这里的原因是因为循环导包的问题
@@ -27,7 +27,7 @@ var (
 
 //此处用sync.once用来防止多次请求导致的内存浪费，因为register仅仅是用来调用Do方法的，不存在因为多个请求导致的registerService的内存访问出现的问题
 
-func NewHandleRegister(user *Repository.User) (StatusCode, error) {
+func NewRegisterHandle(user *Repository.User) error {
 	registerOnce.Do(func() {
 		registerService = &register{}
 	})
@@ -36,18 +36,18 @@ func NewHandleRegister(user *Repository.User) (StatusCode, error) {
 
 //此处的两个操作不满足并发模型
 
-func (service *register) Do(user *Repository.User) (StatusCode, error) {
+func (service *register) Do(user *Repository.User) error {
 	dao := Dao.NewUserDao()
 	exist, err := dao.UsernameIsExist(user.Username)
 	if exist {
-		return UsernameExist, fmt.Errorf("用户名已经存在")
+		return fmt.Errorf("用户名已经存在")
 	}
 	if err != nil {
-		return ServerError, err
+		return err
 	}
 	err = dao.KeepUserToDataSource(user)
 	if err != nil {
-		return ServerError, err
+		return err
 	}
-	return SuccessRegister, nil
+	return nil
 }

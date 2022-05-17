@@ -26,16 +26,22 @@ func Register(username string, password string, rePassword string) Service.Statu
 		Password: util.MD5EnCrypto(password),
 	}
 	//交给Service进行处理
-	register, err := Service.NewHandleRegister(&user)
+	err := Service.NewRegisterHandle(&user)
 	if err != nil {
 		fmt.Println(err)
+		return Service.ServerError
 	}
-	return register
+	return Service.Success
 }
 
-//func Log(username string, password string)(StatusCode, error){
-//
-//
-//
-//	return
-//}
+func Log(username string, password string) (Service.StatusCode, bool) {
+	user := Repository.User{
+		Username: username,
+		Password: util.MD5EnCrypto(password),
+	}
+	handle, err := Service.NewLogHandle(&user)
+	if err != nil {
+		return Service.ServerError, false
+	}
+	return Service.Success, handle
+}
