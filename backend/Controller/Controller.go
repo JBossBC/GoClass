@@ -9,12 +9,10 @@ import (
 
 //检查第一次输入的密码和第二次密码的方式最好放在前端执行
 const (
-	InputPasswordError StatusCode = 401
+	InputPasswordError Service.StatusCode = 401
 )
 
-type StatusCode int
-
-func Register(username string, password string, rePassword string) StatusCode {
+func Register(username string, password string, rePassword string) Service.StatusCode {
 	//controller层处理username和password以及rePassword
 
 	//先对password和rePassword进行验证处理

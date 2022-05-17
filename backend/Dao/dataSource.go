@@ -28,7 +28,8 @@ type MysqlConfig struct {
 func init() {
 	v := viper.New()
 	v.SetConfigName("dataSource")
-	v.SetConfigFile("./configure.yaml")
+	v.SetConfigFile("./backend/Dao/configure.yaml")
+	//v.SetConfigFile("./configure.yaml")
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
 	if err != nil {
