@@ -1,7 +1,6 @@
 package Dao
 
 import (
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 	"goClass/backend/Dao/Cache"
@@ -23,8 +22,8 @@ func init() {
 	wd, _ := os.Getwd()
 	configureFile.WriteString(wd)
 	configureFile.WriteString("/backend/Dao/configure.yaml")
-	fmt.Println(configureFile.String())
 	v.SetConfigFile(configureFile.String())
+	//test DataSource configure
 	//v.SetConfigFile("./configure.yaml")
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()

@@ -6,5 +6,5 @@ import (
 )
 
 func TestRedis(t *testing.T) {
-	Cache.NewCookieDao().KeepCookieToCache("test")
+	Cache.NewCookieDao().KeepCookieToCache("test", "xiyang")
 }

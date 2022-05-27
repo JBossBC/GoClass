@@ -2,9 +2,9 @@ package Dao
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"goClass/backend/Repository"
 	"goClass/backend/util"
+	gorm2 "gorm.io/gorm"
 	"testing"
 )
 
@@ -14,11 +14,11 @@ func TestDataSourceInit(t *testing.T) {
 	//newUser := Repository.User{}
 	//connection.CreateTable(&Repository.User{})
 	user := Repository.User{
-		Model:    gorm.Model{},
+		Model:    gorm2.Model{},
 		Username: "1577002722",
 		Password: util.MD5EnCrypto("jiang19780809"),
 	}
-	connection.Create(&user)
+	println(connection.Create(&user).RowsAffected)
 	fmt.Println(user.Password)
 	//connection.Where("username= ? ", user.Username).Select("username").Find(&Repository.User{}).Scan(&newUser)
 	//connection.Find(&Repository.User{}).Scan(&newUser)
@@ -43,7 +43,7 @@ func TestUserIsExist(t *testing.T) {
 
 func TestKeepUser(t *testing.T) {
 	user := Repository.User{
-		Model:    gorm.Model{},
+		Model:    gorm2.Model{},
 		Username: "135491849165",
 		Password: util.MD5EnCrypto("45984561894"),
 	}
@@ -51,4 +51,42 @@ func TestKeepUser(t *testing.T) {
 	if err != nil {
 		return
 	}
+}
+func TestUpdata(t *testing.T) {
+	GetMysqlConnection().AutoMigrate(&Repository.User{})
+	GetMysqlConnection().AutoMigrate(&Repository.Article{})
+}
+func TestArticleDao_AddArticle(t *testing.T) {
+	//GetMysqlConnection().Create(&Repository.Article{})
+	GetMysqlConnection().AutoMigrate(&Repository.Article{}, &Repository.User{})
+	//article := Repository.Article{
+	//	Model:      gorm2.Model{},
+	//	BelongUser: 9,
+	//	Header:     "hello,world",
+	//	Context:    "this is text data about adding article",
+	//}
+	u := Repository.User{}
+
+	GetMysqlConnection().Find(&u, 9)
+	article1 := Repository.Article{
+		Model:   gorm2.Model{},
+		Header:  "text",
+		Context: "text",
+	}
+	dao := NewArticleDao()
+	err := dao.AddArticle(&article1)
+	if err != nil {
+		return
+	}
+	//dao := NewArticleDao()
+	//NewUserDao().KeepUserToDataSource(&Repository.User{
+	//	Model:       gorm2.Model{},
+	//	Username:    "xiyang",
+	//	Password:    "1577002722",
+	//})
+	//err := dao.AddArticle(article1)
+	//if err != nil {
+	//	log.Fatal(err)
+	//	return
+	//}
 }

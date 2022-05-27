@@ -9,8 +9,6 @@ import (
 
 const (
 	UsernameExist StatusCode = 402
-	ServerError   StatusCode = 500
-	Success       StatusCode = 200
 )
 
 //StatusCode 定义在这里的原因是因为循环导包的问题
@@ -39,7 +37,7 @@ func NewRegisterHandle(user *Repository.User) error {
 func (service *register) Do(user *Repository.User) error {
 	dao := Dao.NewUserDao()
 	exist, err := dao.UsernameIsExist(user.Username)
-	if exist {
+	if !exist {
 		return fmt.Errorf("用户名已经存在")
 	}
 	if err != nil {

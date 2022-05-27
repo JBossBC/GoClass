@@ -5,9 +5,11 @@ import (
 	"goClass/backend/Repository"
 	"goClass/backend/Service"
 	"goClass/backend/util"
+	"log"
 )
 
 //检查第一次输入的密码和第二次密码的方式最好放在前端执行
+
 const (
 	InputPasswordError Service.StatusCode = 401
 )
@@ -28,10 +30,10 @@ func Register(username string, password string, rePassword string) Service.Statu
 	//交给Service进行处理
 	err := Service.NewRegisterHandle(&user)
 	if err != nil {
-		fmt.Println(err)
-		return Service.ServerError
+		log.Println(err)
+		return 400
 	}
-	return Service.Success
+	return 200
 }
 
 func Log(username string, password string) bool {

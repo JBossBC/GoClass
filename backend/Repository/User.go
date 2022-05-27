@@ -1,9 +1,11 @@
 package Repository
 
-import "github.com/jinzhu/gorm"
+import (
+	gorm2 "gorm.io/gorm"
+)
 
 type User struct {
-	gorm.Model
+	gorm2.Model
 	Username string
 	Password string
 }
