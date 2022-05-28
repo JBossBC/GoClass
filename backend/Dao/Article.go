@@ -43,7 +43,7 @@ func (articleDao *ArticleDao) AccordingIDFindUserName(articleId int) (string, er
 func (articleDao *ArticleDao) FindArticleAccodingUserName(userName string, number int) ([]*Repository.Article, error) {
 	articleList := make([]*Repository.Article, number)
 	connection := GetMysqlConnection()
-	if err := connection.Where("user_name=?", userName).Find(&articleList).Error; err != nil {
+	if err := connection.Model(&Repository.Article{}).Where(" user_name = ? ", userName).Limit(number).Find(&articleList).Error; err != nil {
 		return nil, err
 	}
 	return articleList, nil

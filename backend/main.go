@@ -70,9 +70,13 @@ func initRoute(engine *gin.Engine) {
 			context.JSON(int(statusCode), "congratulation you delete article successful")
 		}
 	})
+	//GET article params:targetUserName number
 	engine.Handle(http.MethodGet, "getArticle", func(context *gin.Context) {
 		var number int
 		targetUserName := context.Query("targetUserName")
+		if targetUserName == "" {
+			context.JSON(300, "send target UserName is empty,please send you need to find the username of article")
+		}
 		numberStr := context.Query("number")
 		if numberStr == "" {
 			number = DefaultNumber

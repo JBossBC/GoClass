@@ -54,9 +54,6 @@ type PageArticle struct {
 	ArticleList []*Repository.Article
 }
 
-func (articleServer *ArticleServer) DefaultFindArticle(targetUserName string) ([]*Repository.Article, error) {
-	return articleServer.FindArticle(targetUserName, DefaultNumber)
-}
 func (articleServer *ArticleServer) FindArticle(targetUserName string, number int) ([]*Repository.Article, error) {
 	return Dao.NewArticleDao().FindArticleAccodingUserName(targetUserName, number)
 }
