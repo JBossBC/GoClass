@@ -55,3 +55,8 @@ func (articleDao *ArticleDao) FindArticleAccodingUserName(userName string, numbe
 	}
 	return articleList, nil
 }
+func (articleDao *ArticleDao) UpdateArticle(article *Repository.Article) error {
+	connection := GetMysqlConnection()
+	err := connection.Model(&Repository.Article{}).Where("id=?", article.ID).Updates(map[string]interface{}{"header": article.Header, "context": article.Context}).Error
+	return err
+}

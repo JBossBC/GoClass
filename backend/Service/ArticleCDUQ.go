@@ -76,3 +76,7 @@ func (articleServer *ArticleServer) FindArticle(targetUserName string, number in
 	}
 	return &page, nil
 }
+
+func (articleServer *ArticleServer) UpdateArticle(atricle *Repository.Article) error {
+	return Dao.NewArticleDao().UpdateArticle(atricle)
+}

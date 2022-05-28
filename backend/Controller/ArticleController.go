@@ -42,3 +42,12 @@ func FindArticle(TargetUserName string, number int) (*Service.ArticlePage, error
 
 	return articleList, nil
 }
+func UpdateArticle(header string, context string, updateId int) error {
+	article := &Repository.Article{
+		Model:    gorm2.Model{ID: uint(updateId)},
+		UserName: "",
+		Header:   header,
+		Context:  context,
+	}
+	return Service.NewArticleServer().UpdateArticle(article)
+}

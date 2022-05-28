@@ -107,8 +107,14 @@ func initRoute(engine *gin.Engine) {
 	})
 	//updateArticle  params:header,context,updateID                LogSession
 	engine.Handle(http.MethodPost, "/updateArticle", func(context *gin.Context) {
-		//header := context.PostForm("header")
-		//ArticleContext := context.PostForm("context")
-		//updateId := context.PostForm("updateId")
+		header := context.PostForm("header")
+		ArticleContext := context.PostForm("context")
+		updateIdStr := context.PostForm("updateId")
+		updateId, _ := strconv.Atoi(updateIdStr)
+		err := Controller.UpdateArticle(header, ArticleContext, updateId)
+		if err != nil {
+			context.JSON(400, err)
+		}
+		context.JSON(200, "congratulation you update successful")
 	})
 }

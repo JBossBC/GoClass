@@ -100,3 +100,19 @@ func TestUserDao_UserIsExist(t *testing.T) {
 		Password: "test",
 	}))
 }
+func TestArticleDao_UpdateArticle(t *testing.T) {
+	NewArticleDao().UpdateArticle(&Repository.Article{
+		Model:    gorm2.Model{ID: 1},
+		UserName: "1577002722",
+		Header:   "test1",
+		Context:  "test1",
+	})
+}
+func TestArticleDao_AddArticle2(t *testing.T) {
+	NewArticleDao().AddArticle(&Repository.Article{
+		Model:    gorm2.Model{},
+		UserName: "1577002722",
+		Header:   "test",
+		Context:  "test",
+	})
+}
