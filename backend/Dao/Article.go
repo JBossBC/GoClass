@@ -15,6 +15,7 @@ var (
 
 func NewArticleDao() *ArticleDao {
 	articleDaoOnce.Do(func() {
+		GetMysqlConnection().AutoMigrate(&Repository.Article{})
 		articleDao = &ArticleDao{}
 	})
 	return articleDao

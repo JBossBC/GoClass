@@ -21,6 +21,7 @@ func init() {
 	configureFile := strings.Builder{}
 	wd, _ := os.Getwd()
 	configureFile.WriteString(wd)
+
 	configureFile.WriteString("/backend/Dao/configure.yaml")
 	v.SetConfigFile(configureFile.String())
 

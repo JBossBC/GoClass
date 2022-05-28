@@ -54,6 +54,8 @@ func initRoute(engine *gin.Engine) {
 			Cache.NewCookieDao().KeepCookieToCache(tempUUID, username)
 			context.SetCookie("goClass", tempUUID, 0, "/", ".", true, true)
 			context.JSON(http.StatusOK, "congratulations you log success")
+		} else {
+			context.JSON(300, "log failed,maybe your password or username is wrong")
 		}
 	})
 	//addArticle route  post request params:header context cookie:log_auth
@@ -82,6 +84,7 @@ func initRoute(engine *gin.Engine) {
 		if statusCode == 200 {
 			context.JSON(int(statusCode), "congratulation you delete article successful")
 		}
+		context.JSON(int(statusCode), "delete article failed ,please wait a moment")
 	})
 	//GET article params:targetUserName number
 	engine.Handle(http.MethodGet, "getArticle", func(context *gin.Context) {
@@ -100,7 +103,7 @@ func initRoute(engine *gin.Engine) {
 		if err != nil {
 			context.JSON(400, err)
 		}
-		context.JSON(200, &article)
+		context.JSON(200, article)
 	})
 	//updateArticle  params:header,context,updateID                LogSession
 	engine.Handle(http.MethodPost, "/updateArticle", func(context *gin.Context) {

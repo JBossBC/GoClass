@@ -93,3 +93,10 @@ func TestArticleDao_AddArticle(t *testing.T) {
 func TestFindNowArticleId(t *testing.T) {
 	println(NewArticleDao().NowArticleID())
 }
+func TestUserDao_UserIsExist(t *testing.T) {
+	println(NewUserDao().UserIsExist(&Repository.User{
+		Model:    gorm2.Model{},
+		Username: "test",
+		Password: "test",
+	}))
+}

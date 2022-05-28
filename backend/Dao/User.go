@@ -1,10 +1,11 @@
 package Dao
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"goClass/backend/Repository"
+	"log"
+	"strings"
 	"sync"
 )
 
@@ -18,6 +19,7 @@ var (
 
 func NewUserDao() *UserDao {
 	once.Do(func() {
+		GetMysqlConnection().AutoMigrate(&Repository.User{})
 		userDao = &UserDao{}
 	})
 	return userDao
@@ -49,9 +51,15 @@ func (userDao *UserDao) KeepUserToDataSource(user *Repository.User) error {
 
 func (userDao *UserDao) UserIsExist(user *Repository.User) bool {
 	connection := GetMysqlConnection()
-	if err := connection.Where("username = ? and password = ?", user.Username, user.Password).Find(&user).Error; err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			fmt.Println(err.Error())
+	var DataUser *Repository.User = &Repository.User{}
+	//println(connection.Model(&Repository.User{}).Where("username = ? and password = ?", user.Username, user.Password).First(user).Error.Error())
+	//if DataUser != nil {
+	//	return true
+	//}
+	//return false
+	if err := connection.Model(&Repository.User{}).Where("username = ? and password = ?", user.Username, user.Password).First(DataUser).Error; err != nil {
+		if strings.Compare(err.Error(), "record not found") != 0 {
+			log.Println(err.Error())
 			return false
 		} else {
 			return false

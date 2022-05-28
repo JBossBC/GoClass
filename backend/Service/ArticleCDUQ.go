@@ -56,9 +56,9 @@ type ArticlePage struct {
 	Article []*ShowArticle
 }
 type ShowArticle struct {
-	username string
-	header   string
-	context  string
+	Username string `json:"Username"`
+	Header   string `json:"Header"`
+	Context  string `json:"Context"`
 }
 
 func (articleServer *ArticleServer) FindArticle(targetUserName string, number int) (*ArticlePage, error) {
@@ -69,9 +69,9 @@ func (articleServer *ArticleServer) FindArticle(targetUserName string, number in
 	page := ArticlePage{Article: make([]*ShowArticle, len(name))}
 	for i := 0; i < len(name); i++ {
 		page.Article[i] = &ShowArticle{
-			username: name[i].UserName,
-			header:   name[i].Header,
-			context:  name[i].Context,
+			Username: name[i].UserName,
+			Header:   name[i].Header,
+			Context:  name[i].Context,
 		}
 	}
 	return &page, nil
