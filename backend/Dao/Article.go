@@ -40,6 +40,12 @@ func (articleDao *ArticleDao) AccordingIDFindUserName(articleId int) (string, er
 	}
 	return article.UserName, nil
 }
+func (articleDao *ArticleDao) NowArticleID() int {
+	connection := GetMysqlConnection()
+	var ArticleID int
+	connection.Model(&Repository.Article{}).Select("id").Last(&ArticleID)
+	return ArticleID
+}
 func (articleDao *ArticleDao) FindArticleAccodingUserName(userName string, number int) ([]*Repository.Article, error) {
 	articleList := make([]*Repository.Article, number)
 	connection := GetMysqlConnection()

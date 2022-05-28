@@ -23,8 +23,10 @@ func init() {
 	configureFile.WriteString(wd)
 	configureFile.WriteString("/backend/Dao/configure.yaml")
 	v.SetConfigFile(configureFile.String())
+
 	//test DataSource configure
 	//v.SetConfigFile("./configure.yaml")
+
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
 	if err != nil {

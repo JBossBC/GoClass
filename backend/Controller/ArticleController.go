@@ -8,19 +8,19 @@ import (
 	"strconv"
 )
 
-func AddArticle(header string, context string, userName string) Service.StatusCode {
+func AddArticle(header string, context string, userName string) (Service.StatusCode, int) {
 	article := Repository.Article{
 		Model:    gorm2.Model{},
 		UserName: userName,
 		Header:   header,
 		Context:  context,
 	}
-	err := Service.NewArticleServer().AddArticle(article)
+	nowId, err := Service.NewArticleServer().AddArticle(article)
 	if err != nil {
 		log.Println(err)
-		return 400
+		return 400, 0
 	}
-	return 200
+	return 200, nowId
 }
 
 func DeleteArticle(articleIdString string, userName string) Service.StatusCode {
@@ -33,14 +33,12 @@ func DeleteArticle(articleIdString string, userName string) Service.StatusCode {
 	return 200
 }
 
-func FindArticle(TargetUserName string, number int) (*Service.PageArticle, error) {
+func FindArticle(TargetUserName string, number int) (*Service.ArticlePage, error) {
 	articleList, err := Service.NewArticleServer().FindArticle(TargetUserName, number)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	article := &Service.PageArticle{
-		ArticleList: articleList,
-	}
-	return article, nil
+
+	return articleList, nil
 }

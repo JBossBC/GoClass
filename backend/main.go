@@ -4,17 +4,31 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-basic/uuid"
 	"goClass/backend/Controller"
+	_ "goClass/backend/Dao"
 	"goClass/backend/Dao/Cache"
 	"goClass/backend/Service"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
 func main() {
 	engine := gin.Default()
+	openLog(engine)
 	initRoute(engine)
 	engine.Run()
+}
+func openLog(engine *gin.Engine) {
+	file, err := os.OpenFile("C:\\ProgramData\\goClass\\goClass.log", os.O_CREATE, 0644)
+	if err != nil {
+		panic(err)
+	}
+	gin.DisableConsoleColor()
+	config := gin.LoggerConfig{Output: file}
+	gin.LoggerWithConfig(config)
+	gin.DefaultWriter = io.MultiWriter(file)
 }
 
 const DefaultNumber = 5
@@ -48,15 +62,14 @@ func initRoute(engine *gin.Engine) {
 		if err != nil {
 			context.JSON(300, "You haven't signed in yet,please retry after log in  ")
 		}
-		tempHeader := context.PostForm("header")
-		header := strconv.QuoteToASCII(tempHeader)
+		Header := context.PostForm("header")
 		ArticleContext := context.PostForm("context")
-		article := Controller.AddArticle(header, ArticleContext, userName)
+		article, nowId := Controller.AddArticle(Header, ArticleContext, userName)
 		if article != 200 {
 			log.Println(err)
 			context.JSON(int(article), err.Error())
 		}
-		context.JSON(200, "congratulation you add article successful")
+		context.JSON(200, "congratulation you add article successful articleId is "+strconv.Itoa(nowId))
 	})
 	//deleteArticleRoute   params:article_id cookie:log_auth
 	engine.Handle(http.MethodGet, "/deleteArticle", func(context *gin.Context) {
@@ -87,6 +100,12 @@ func initRoute(engine *gin.Engine) {
 		if err != nil {
 			context.JSON(400, err)
 		}
-		context.JSON(200, article)
+		context.JSON(200, &article)
+	})
+	//updateArticle  params:header,context,updateID                LogSession
+	engine.Handle(http.MethodPost, "/updateArticle", func(context *gin.Context) {
+		//header := context.PostForm("header")
+		//ArticleContext := context.PostForm("context")
+		//updateId := context.PostForm("updateId")
 	})
 }

@@ -90,3 +90,6 @@ func TestArticleDao_AddArticle(t *testing.T) {
 	//	return
 	//}
 }
+func TestFindNowArticleId(t *testing.T) {
+	println(NewArticleDao().NowArticleID())
+}

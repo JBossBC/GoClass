@@ -22,8 +22,10 @@ func NewArticleServer() *ArticleServer {
 	})
 	return articleServer
 }
-func (articleServer *ArticleServer) AddArticle(article Repository.Article) error {
-	return Dao.NewArticleDao().AddArticle(&article)
+func (articleServer *ArticleServer) AddArticle(article Repository.Article) (int, error) {
+	err := Dao.NewArticleDao().AddArticle(&article)
+	id := Dao.NewArticleDao().NowArticleID()
+	return id, err
 }
 func (articleServer *ArticleServer) DeleteArticle(articleID int, userName string) error {
 	if !articleServer.havePowerToUpdateArticle(articleID, userName) {
@@ -50,10 +52,27 @@ func (articleServer *ArticleServer) havePowerToUpdateArticle(articleID int, user
 
 const DefaultNumber = 5
 
-type PageArticle struct {
-	ArticleList []*Repository.Article
+type ArticlePage struct {
+	Article []*ShowArticle
+}
+type ShowArticle struct {
+	username string
+	header   string
+	context  string
 }
 
-func (articleServer *ArticleServer) FindArticle(targetUserName string, number int) ([]*Repository.Article, error) {
-	return Dao.NewArticleDao().FindArticleAccodingUserName(targetUserName, number)
+func (articleServer *ArticleServer) FindArticle(targetUserName string, number int) (*ArticlePage, error) {
+	name, err := Dao.NewArticleDao().FindArticleAccodingUserName(targetUserName, number)
+	if err != nil {
+		return nil, err
+	}
+	page := ArticlePage{Article: make([]*ShowArticle, len(name))}
+	for i := 0; i < len(name); i++ {
+		page.Article[i] = &ShowArticle{
+			username: name[i].UserName,
+			header:   name[i].Header,
+			context:  name[i].Context,
+		}
+	}
+	return &page, nil
 }
