@@ -10,7 +10,7 @@ import (
 
 var (
 	pictureDao  *PictureDao
-	pictureOnce *sync.Once
+	pictureOnce sync.Once
 )
 
 type PictureDao struct {

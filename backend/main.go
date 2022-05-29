@@ -61,8 +61,9 @@ func initRoute(engine *gin.Engine) {
 	//addArticle route  post request params:header context cookie:log_auth
 	engine.Handle(http.MethodPost, "/addArticle", func(context *gin.Context) {
 		userName, err := Service.MiddleLogInspect(context)
-		if err != nil {
+		if err != nil || userName == "" {
 			context.JSON(300, "You haven't signed in yet,please retry after log in  ")
+			return
 		}
 		Header := context.PostForm("header")
 		ArticleContext := context.PostForm("context")
@@ -70,19 +71,22 @@ func initRoute(engine *gin.Engine) {
 		if article != 200 {
 			log.Println(err)
 			context.JSON(int(article), err.Error())
+			return
 		}
 		context.JSON(200, "congratulation you add article successful articleId is "+strconv.Itoa(nowId))
 	})
-	//deleteArticleRoute   params:article_id cookie:log_auth
+	//deleteArticleRoute   params:articleID cookie:log_auth
 	engine.Handle(http.MethodGet, "/deleteArticle", func(context *gin.Context) {
 		articleID := context.Query("articleID")
 		logUserName, err := Service.MiddleLogInspect(context)
 		if err != nil {
 			context.JSON(400, err)
+			return
 		}
 		statusCode := Controller.DeleteArticle(articleID, logUserName)
 		if statusCode == 200 {
 			context.JSON(int(statusCode), "congratulation you delete article successful")
+			return
 		}
 		context.JSON(int(statusCode), "delete article failed ,please wait a moment")
 	})
@@ -92,6 +96,7 @@ func initRoute(engine *gin.Engine) {
 		targetUserName := context.Query("targetUserName")
 		if targetUserName == "" {
 			context.JSON(300, "send target UserName is empty,please send you need to find the username of article")
+			return
 		}
 		numberStr := context.Query("number")
 		if numberStr == "" {
@@ -102,6 +107,7 @@ func initRoute(engine *gin.Engine) {
 		article, err := Controller.FindArticle(targetUserName, number)
 		if err != nil {
 			context.JSON(400, err)
+			return
 		}
 		context.JSON(200, article)
 	})
@@ -114,6 +120,7 @@ func initRoute(engine *gin.Engine) {
 		err := Controller.UpdateArticle(header, ArticleContext, updateId)
 		if err != nil {
 			context.JSON(400, err)
+			return
 		}
 		context.JSON(200, "congratulation you update successful")
 	})
@@ -121,10 +128,12 @@ func initRoute(engine *gin.Engine) {
 		file, err := context.FormFile("picture")
 		if err != nil {
 			context.JSON(300, "file params wrong")
+			return
 		}
 		err = Controller.UploadPicture(file)
 		if err != nil {
 			context.JSON(400, "uploadFailed")
+			return
 		}
 		context.JSON(200, "upload successful")
 	})
