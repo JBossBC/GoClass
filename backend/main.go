@@ -87,7 +87,7 @@ func initRoute(engine *gin.Engine) {
 		context.JSON(int(statusCode), "delete article failed ,please wait a moment")
 	})
 	//GET article params:targetUserName number
-	engine.Handle(http.MethodGet, "getArticle", func(context *gin.Context) {
+	engine.Handle(http.MethodGet, "/getArticle", func(context *gin.Context) {
 		var number int
 		targetUserName := context.Query("targetUserName")
 		if targetUserName == "" {
@@ -116,5 +116,16 @@ func initRoute(engine *gin.Engine) {
 			context.JSON(400, err)
 		}
 		context.JSON(200, "congratulation you update successful")
+	})
+	engine.Handle(http.MethodPost, "/uploadPicture", func(context *gin.Context) {
+		file, err := context.FormFile("picture")
+		if err != nil {
+			context.JSON(300, "file params wrong")
+		}
+		err = Controller.UploadPicture(file)
+		if err != nil {
+			context.JSON(400, "uploadFailed")
+		}
+		context.JSON(200, "upload successful")
 	})
 }

@@ -21,12 +21,12 @@ func init() {
 	configureFile := strings.Builder{}
 	wd, _ := os.Getwd()
 	configureFile.WriteString(wd)
-	//
-	//configureFile.WriteString("/backend/Dao/configure.yaml")
-	//v.SetConfigFile(configureFile.String())
+
+	configureFile.WriteString("/backend/Dao/configure.yaml")
+	v.SetConfigFile(configureFile.String())
 
 	//test DataSource configure
-	v.SetConfigFile("./configure.yaml")
+	//v.SetConfigFile("./configure.yaml")
 
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
